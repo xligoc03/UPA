@@ -9,11 +9,11 @@ from database.mongo_init import MongoDatabase
 # pylint: disable=missing-function-docstring
 def main() -> int:
     mongo_db = MongoDatabase(27017)
+
+    db_client = mongo_db.create_client()
     mongo_db.print_info()
 
-    #db_client = mongo_db.create_client()
-
-    return mongo_db.check_connection()
+    return mongo_db.check_connection(db_client)
 
 
 if __name__ == '__main__':

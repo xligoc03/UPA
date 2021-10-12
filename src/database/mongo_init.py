@@ -1,5 +1,6 @@
 import os
 
+import logging
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
@@ -13,11 +14,14 @@ class MongoDatabase:
         self.mongo_client = MongoClient('localhost', self.port)
         return self.mongo_client
 
-    def check_connection(self):
+    def check_connection(self, client) -> int:
+        if client is None:
+            client = self.create_client()
+
         try:
-            self.mongo_client.admin.command('ping')
+            client.admin.command('ping')
         except ConnectionFailure:
-            print("Server not available")
+            logging.error("Server not available")
 
         return os.EX_OK
 
@@ -25,4 +29,7 @@ class MongoDatabase:
         self.mongo_client.close()
 
     def print_info(self):
-        print(self.mongo_client)
+        if self.mongo_client is None:
+            logging.warning("Database client is not connected")
+        else:
+            print(self.mongo_client)

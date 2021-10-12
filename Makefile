@@ -6,7 +6,7 @@ DEPS = requirements.txt
 all : deps check-pylint
 
 check-pylint: $(SRCS_DIR)
-	python3 -m pylint src --rcfile=pylintrc
+	python3 -m pylint $(SRCS_DIR) --rcfile=pylintrc
 
 deps: $(DEPS)
 	pip3 install -r $(DEPS)
