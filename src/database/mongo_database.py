@@ -40,7 +40,7 @@ class MongoDatabase:
         else:
             print(self.mongo_client)
 
-    def import_xml_data(self, xml, db_name, collection) -> int:
+    def import_data(self, xml, db_name, collection) -> int:
         with open(xml, 'r') as file:
             data = file.read()
         # convert XML to json string and than to dict
