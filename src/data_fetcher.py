@@ -1,38 +1,94 @@
+import json
+import re
 from os.path import exists, join
 from os import makedirs
+import xml.etree.ElementTree as ET
+from typing import Dict, List
 
 import requests
-import pandas
+import pandas as pd
 
-from src.config import BASE_DATA_FOLDER, REGION_CODES
+from src.config import BASE_DATA_FOLDER, REGION_CODES, DATA_URL, SCHOOLS_DATA_URL
 
 
-def fetch_schools() -> pandas.DataFrame:
+def fetch_schools() -> Dict:
     if not exists(join(BASE_DATA_FOLDER, "xml")):
         makedirs(join(BASE_DATA_FOLDER, "xml"))
 
     school_data_file_path = join(BASE_DATA_FOLDER, "xml/schools.xml")
+
     # check if file exists
-    if exists(school_data_file_path):
-        # open file in pandas dataframe
-        return pandas.read_xml(school_data_file_path)
+    if not exists(school_data_file_path):
+        # download file first, save, than open
+        request_data = requests.get(SCHOOLS_DATA_URL)
+        with open(school_data_file_path, 'wb') as file:
+            file.write(request_data.content)
 
-    # download file first, save, than open
-    request_data = requests.get("https://rejstriky.msmt.cz/opendata/vrejcelk.xml")
-    with open(school_data_file_path, 'wb') as file:
-        file.write(request_data.content)
+    root = ET.parse(school_data_file_path, ).getroot()
 
-    return pandas.read_xml(school_data_file_path)
+    all_items = []
+    for root_elem in root.findall('PravniSubjekt'):
+        item_dict = {}
+        for elem in root_elem.findall('./Reditelstvi'):
+            name = elem.find('./RedPlnyNazev').text
+
+            address_item = parse_address(elem, ['RedAdresa1', 'RedAdresa2', 'RedAdresa3'])
+            address_item['okres_kod'] = elem.find('./Okres').text
+
+            school_items = []
+
+            for director_elem in elem.findall('Reditel'):
+                director_item = {
+                    'meno': director_elem.find('./ReditelJmeno').text.split(' ')[0]
+                        if director_elem.find('./ReditelJmeno') is not None else None,
+                    'priezvisko': director_elem.find('./ReditelJmeno').text.split(' ')[1]
+                        if director_elem.find('./ReditelJmeno') is not None else None,
+                    'adresa': parse_address(director_elem, ['ReditelAdresa1', 'ReditelAdresa2', 'ReditelAdresa3'])
+               }
+
+            for schools_elem in root_elem.findall('./SkolyZarizeni'):
+                for school_elem in schools_elem.findall('./SkolaZarizeni'):
+                    school_items.append({
+                        'nazov': school_elem.find('SkolaPlnyNazev').text,
+                        'typ': school_elem.find('SkolaDruhTyp').text,
+                        'kapacita': school_elem.find('SkolaKapacita').text
+                    })
+
+                item_dict['nazov'] = name
+                item_dict['adresa'] = address_item
+                item_dict['riaditel'] = director_item
+                item_dict['zariadenia'] = school_items
+
+            all_items.append(item_dict)
+
+    return all_items
+
+
+def parse_address(element: ET.Element, tag_names: List) -> Dict:
+    common_tags = sorted(list(set(list(map(lambda x: x.tag, element.findall('./')))) & set(tag_names)), reverse=True)
+
+    if len(common_tags) == 0:
+        return None
+
+    postal_code = None
+    city = None
+
+    address = element.find(f"./{common_tags[2]}").text
+    city_district = element.find(f"./{common_tags[1]}").text
+    if element.find(f"./{common_tags[0]}") is not None and element.find(f"./{common_tags[0]}").text is not None:
+        postal_code = re.search('([0-9 ])*', element.find(f"./{common_tags[0]}").text).group(0).replace(" ", "")
+        city = re.search(' \D+[ 0-9]*', element.find(f"./{common_tags[0]}").text).group(0).strip()
+
+    return {'ulica': address, 'mesto': city, 'mestska_cast': city_district, 'psc': postal_code}
 
 
 def clean_school_data():
     schools = fetch_schools()
-    tmp = schools.to_json(orient="records")
-    print(schools.columns)
+    tmp = json.dumps(schools, ensure_ascii=False)
     return tmp
 
 
-def fetch_regions() -> pandas.DataFrame:
+def fetch_regions() -> pd.DataFrame:
     if not exists(join(BASE_DATA_FOLDER, "csv")):
         makedirs(join(BASE_DATA_FOLDER, "csv"))
 
@@ -40,16 +96,14 @@ def fetch_regions() -> pandas.DataFrame:
     # check if file exists
     if exists(regions_data_file_path):
         # open file in pandas dataframe
-        return pandas.read_csv(regions_data_file_path)
+        return pd.read_csv(regions_data_file_path)
 
     # dowload file first, save, than open
-    request_data = requests.get("https://www.czso.cz/documents/62353418/143522504/130142"
-                                "-21data043021.csv/760fab9c-d079-4d3a-afed-59cbb639e37d"
-                                "?version=1.1")
+    request_data = requests.get(DATA_URL)
     with open(regions_data_file_path, 'wb') as file:
         file.write(request_data.content)
 
-    return pandas.read_csv(regions_data_file_path)
+    return pd.read_csv(regions_data_file_path)
 
 
 def clean_regions_data():
