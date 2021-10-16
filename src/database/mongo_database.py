@@ -1,8 +1,6 @@
 import os
 
 import logging
-import json
-import xmltodict
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from src.config import DB_HOST, DB_PSWD, DB_USER
@@ -40,17 +38,9 @@ class MongoDatabase:
         else:
             print(self.mongo_client)
 
-    def import_data(self, xml, db_name, collection) -> int:
-        with open(xml, 'r') as file:
-            data = file.read()
-        # convert XML to json string and than to dict
-        json_data = json.loads(json.dumps(xmltodict.parse(data)))["ExportDat"]["PravniSubjekt"]
-
-        database = self.create_db(db_name)
-        collection = database[collection]
-
-        if isinstance(json_data, list):
-            collection.insert_many(json_data)
+    def import_data(self, data, collection) -> int:
+        if isinstance(data, list):
+            collection.insert_many(data)
         else:
-            collection.insert_one(json_data)
+            collection.insert_one(data)
         return 0

@@ -17,7 +17,7 @@ def fetch_schools() -> pandas.DataFrame:
         # open file in pandas dataframe
         return pandas.read_xml(school_data_file_path)
 
-    # dowload file first, save, than open
+    # download file first, save, than open
     request_data = requests.get("https://rejstriky.msmt.cz/opendata/vrejcelk.xml")
     with open(school_data_file_path, 'wb') as file:
         file.write(request_data.content)
@@ -27,7 +27,9 @@ def fetch_schools() -> pandas.DataFrame:
 
 def clean_school_data():
     schools = fetch_schools()
-    return schools  # TODO upravit data a vratit ako objekt pripraveny pre import do DB
+    tmp = schools.to_json(orient="records")
+    print(schools.columns)
+    return tmp
 
 
 def fetch_regions() -> pandas.DataFrame:

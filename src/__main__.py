@@ -18,10 +18,14 @@ def main() -> int:
     mongo_db.print_info()
 
     # DROP TABLE to be sure we work in clean environment
-    db_client.drop_database('schools')
+    db_client.drop_database("schools")
+    # create DB
+    database = MongoDatabase.create_db("schools")
+    # switch collection
+    collection = database["all_schools"]
     # import data # TODO vytvorit db a v nej kolekcie pre school a regions data
     # TODO upravit import aby importoval z objektov a nie zo suboru
-    mongo_db.import_data(os.path.join(BASE_DATA_FOLDER, "xml/schools.xml"), "schools", "all")
+    mongo_db.import_data(get_data.schools, collection)
 
     ########### TEST ###########
     # for doc in db_client["schools"]["all"].find({}).limit(10):
