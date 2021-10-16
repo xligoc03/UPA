@@ -1,10 +1,23 @@
+import os
+
+# data urls
+SCHOOLS_DATA_URL = "https://rejstriky.msmt.cz/opendata/vrejcelk.xml"
+DATA_URL = "https://www.czso.cz/documents/62353418/143522504/130142-21data043021.csv/760fab9c-d079-4d3a-afed-59cbb639e37d?version=1.1"
+
+# root folder
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__)).rstrip("src")
+
 # xml data folder
-BASE_DATA_FOLDER = "./../data"
+BASE_DATA_FOLDER = ROOT_PATH + "data"
 
 # DB
+DB_PORT = "27017"
 DB_USER = "root"
 DB_PSWD = "password"
 DB_HOST = "localhost"
+
+# connection string
+MONGO_CONNECTION_STRING = f"mongodb://{DB_USER}:{DB_PSWD}@{DB_HOST}:{DB_PORT}"
 
 # regions codes
 REGION_CODES = {3018, 3026, 3034, 3042, 3051, 3069, 3077, 3085, 3093, 3107, 3115, 3123, 3131, 3140}

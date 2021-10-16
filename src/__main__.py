@@ -5,7 +5,6 @@ Dockerized application for fetching and processing data about educational system
 import os.path
 import sys
 from database.mongo_database import MongoDatabase
-from config import BASE_DATA_FOLDER
 from src.data_fetcher import DataFetcher
 
 
@@ -20,7 +19,7 @@ def main() -> int:
     # DROP TABLE to be sure we work in clean environment
     db_client.drop_database("schools")
     # create DB
-    database = MongoDatabase.create_db("schools")
+    database = mongo_db.create_db("schools")
     # switch collection
     collection = database["all_schools"]
     # import data # TODO vytvorit db a v nej kolekcie pre school a regions data

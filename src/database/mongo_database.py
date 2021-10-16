@@ -1,9 +1,10 @@
+import json
 import os
 
 import logging
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from src.config import DB_HOST, DB_PSWD, DB_USER
+from src.config import MONGO_CONNECTION_STRING
 
 
 class MongoDatabase:
@@ -12,7 +13,8 @@ class MongoDatabase:
         self.mongo_client = self.create_client()
 
     def create_client(self) -> MongoClient:
-        self.mongo_client = MongoClient('mongodb://%s:%s@%s' % (DB_USER, DB_PSWD, DB_HOST))
+        self.mongo_client = MongoClient(MONGO_CONNECTION_STRING)
+
         return self.mongo_client
 
     def create_db(self, db_name):
@@ -39,8 +41,9 @@ class MongoDatabase:
             print(self.mongo_client)
 
     def import_data(self, data, collection) -> int:
+        data = json.loads(data)
         if isinstance(data, list):
             collection.insert_many(data)
         else:
             collection.insert_one(data)
-        return 0
+        return os.EX_OK
