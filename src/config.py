@@ -1,3 +1,7 @@
+"""
+Project configuration and static values for fetcher and database client
+"""
+
 import os
 
 # data urls

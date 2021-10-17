@@ -2,7 +2,6 @@
 """
 Dockerized application for fetching and processing data about educational system in Czech Republic
 """
-import os.path
 import sys
 from database.mongo_database import MongoDatabase
 from src.data_fetcher import DataFetcher
