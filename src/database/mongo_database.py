@@ -2,7 +2,6 @@
 Database client object representation and it's basic functionality
 """
 
-import json
 import os
 
 import logging
