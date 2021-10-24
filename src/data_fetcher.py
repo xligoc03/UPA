@@ -12,10 +12,10 @@ from typing import Dict, List
 import requests
 import pandas as pd
 
-from src.config import BASE_DATA_FOLDER, REGION_CODES, DATA_URL, SCHOOLS_DATA_URL
+from src.config import BASE_DATA_FOLDER, REGION_CODES, DATA_URL, SCHOOLS_DATA_URL, OKRES_CODES
 
 
-def fetch_schools() -> str:
+def fetch_schools() -> Dict:
     if not exists(join(BASE_DATA_FOLDER, "xml")):
         makedirs(join(BASE_DATA_FOLDER, "xml"))
 
@@ -112,28 +112,29 @@ def fetch_regions() -> pd.DataFrame:
 
     regions_data_file_path = join(BASE_DATA_FOLDER, "csv/regions.csv")
     # check if file exists
-    if exists(regions_data_file_path):
-        # open file in pandas dataframe
-        return pd.read_csv(regions_data_file_path)
+    if not exists(regions_data_file_path):
+        # dowload file first and save
+        request_data = requests.get(DATA_URL)
+        with open(regions_data_file_path, 'wb') as file:
+            file.write(request_data.content)
 
-    # dowload file first, save, than open
-    request_data = requests.get(DATA_URL)
-    with open(regions_data_file_path, 'wb') as file:
-        file.write(request_data.content)
-
+    # open file in pandas dataframe
     return pd.read_csv(regions_data_file_path)
 
 
 def clean_regions_data():
     regions_df = fetch_regions()
-    regions_df = regions_df.loc[(regions_df['casref_do'] == "2020-12-31") &
-                                (regions_df['vuzemi_kod'].isin(REGION_CODES)) &
-                                (regions_df['pohlavi_cis'].isnull()) &
-                                (regions_df['vek_cis'].isnull())]
+    regions_df = regions_df.loc[
+        (regions_df['casref_do'] == "2020-12-31") &  # statics only from last year
+        (~regions_df['vuzemi_kod'].isin(REGION_CODES)) &  # remove region aggregation from dataset
+        (regions_df['pohlavi_kod'].notnull()) &  # remove gender aggregation from dataset
+        (regions_df['vek_kod'].notnull())]  # remove age aggregation from dataset
     regions_df.drop(
-        ["stapro_kod", "pohlavi_cis", "pohlavi_kod", "pohlavi_txt", "vek_cis", "vek_kod",
-         "vek_txt", "vuzemi_cis"],
+        ["idhod", "stapro_kod", "pohlavi_cis", "pohlavi_txt", "vek_cis", "casref_do", "vek_txt", "vuzemi_cis"],
         inplace=True, axis=1)
+
+    regions_df = regions_df.replace(OKRES_CODES)
+
     return regions_df.to_dict("records")
 
 

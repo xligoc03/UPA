@@ -19,16 +19,14 @@ def main() -> int:
     db_client.drop_database("schools")
     # create DB
     database = mongo_db.create_db("schools")
-    # switch collection
+    # switch collection to schools
     collection = database["all_schools"]
-    # import data # TODO vytvorit db a v nej kolekcie pre school a regions data
-    # TODO upravit import aby importoval z objektov a nie zo suboru
+    # import data for schools
     mongo_db.import_data(get_data.schools, collection)
-
-    ########### TEST ###########
-    # for doc in db_client["schools"]["all"].find({}).limit(10):
-    #     print(doc, "\n")
-    ########### TEST ###########
+    # switch collection to cz population
+    collection = database["population"]
+    # import data for population
+    mongo_db.import_data(get_data.regions, collection)
 
     return mongo_db.check_connection(db_client)
 

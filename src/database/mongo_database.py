@@ -45,7 +45,6 @@ class MongoDatabase:
             print(self.mongo_client)
 
     def import_data(self, data, collection) -> int:
-        data = json.loads(data)
         if isinstance(data, list):
             collection.insert_many(data)
         else:
