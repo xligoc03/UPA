@@ -103,7 +103,7 @@ def clean_school_data() -> str:
 
                 all_items.append(item_dict)
 
-    return json.dumps(all_items, ensure_ascii=False)
+    return json.loads(json.dumps(all_items, ensure_ascii=False))
 
 
 def fetch_regions() -> pd.DataFrame:
