@@ -97,6 +97,19 @@ def clean_school_data() -> dict:
                                                                 'ReditelAdresa3'])
                     }
 
+                for founder_elems in elem.findall('Zrizovatele'):
+                    for founder_elem in founder_elems.findall('./Zrizovatel'):
+                        if founder_elem.find('ZrizICO') is not None:
+                            founder_ico = founder_elem.find('ZrizICO').text
+                        if founder_elem.find('ZrizNazev') is not None:
+                            founder_name = founder_elem.find('ZrizNazev').text
+
+                        founder_item = {
+                            'ico': founder_ico,
+                            'nazov': founder_name,
+                            'adresa': parse_address(founder_elem, ['ZrizAdresa1', 'ZrizAdresa2', 'ZrizAdresa3'])
+                        }
+
                 for schools_elem in root_elem.findall('./SkolyZarizeni'):
                     for school_elem in schools_elem.findall('./SkolaZarizeni'):
                         school_items.append({
@@ -109,6 +122,7 @@ def clean_school_data() -> dict:
                     item_dict['adresa'] = address_item
                     item_dict['riaditel'] = director_item
                     item_dict['zariadenia'] = school_items
+                    item_dict['zriadovatel'] = founder_item
 
                 all_items.append(item_dict)
 
