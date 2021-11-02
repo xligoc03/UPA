@@ -1,4 +1,12 @@
-# UPA - projekt
+# UPA - projekt 01: Školství v ČR
+
+## Autori:
+Alexadra Ligocká (xligoc03)\
+Filip Pleško (xplesk02)
+
+## Spustenie
+Projekt je písaný v Python spustitelný z `__main__.py`.
+
 Po spustení projektu, skripty skontrolujú, či sú dostupné datové sady. V prípade že nie, dáta si získaju z online zdrojov. Ďalej sú dátove sady spracované, pripravené na  ďalšie použitie a uložené do databázy.
 
 ## Databáza
