@@ -2,6 +2,7 @@
 """
 Dockerized application for fetching and processing data about educational system in Czech Republic
 """
+import os
 import sys
 from database.mongo_database import MongoDatabase
 from src.data_fetcher import DataFetcher
@@ -13,7 +14,6 @@ def main() -> int:
     get_data = DataFetcher()
 
     db_client = mongo_db.mongo_client
-    mongo_db.print_info()
 
     # DROP TABLE to be sure we work in clean environment
     db_client.drop_database("schools")
@@ -28,7 +28,7 @@ def main() -> int:
     # import data for population
     mongo_db.import_data(get_data.regions, collection)
 
-    return mongo_db.check_connection(db_client)
+    return os.EX_OK
 
 
 if __name__ == '__main__':
