@@ -141,7 +141,7 @@ def fetch_regions() -> pd.DataFrame:
     regions_data_file_path = join(BASE_DATA_FOLDER, "csv/regions.csv")
     # check if file exists
     if not exists(regions_data_file_path):
-        # dowload file first and save
+        # download file first and save
         request_data = requests.get(DATA_URL)
         with open(regions_data_file_path, 'wb') as file:
             file.write(request_data.content)
