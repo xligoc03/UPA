@@ -1,6 +1,8 @@
 # UPA - projekt 01: Školství v ČR
+## Repo
+https://github.com/xligoc03/UPA/tree/master
 
-## Autori:
+## Autori
 Alexadra Ligocká (xligoc03)\
 Filip Pleško (xplesk02)
 
