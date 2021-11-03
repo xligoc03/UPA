@@ -20,6 +20,11 @@ Pred spustením projektu je potrebné Docker kontajner, v ktorom beží databáz
 docker-compose up -d --build
 ```
 
+Prípadne je možné využiť Makefile:
+```shell 
+make run
+```
+
 Po spustení projektu, skripty skontrolujú, či sú dostupné datové sady. V prípade že nie, dáta si získaju z online zdrojov. Ďalej sú dátove sady spracované, pripravené na ďalšie použitie a uložené do databázy.
 
 Príklad spustenia z koreňového adresára: 
