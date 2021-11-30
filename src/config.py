@@ -31,6 +31,97 @@ MONGO_POPULATION_COLLECTION_NAME = "population"
 REGION_CODES = {19, 3018, 3026, 3034, 3042, 3051, 3069, 3077, 3085, 3093, 3107, 3115, 3123, 3131,
                 3140}
 
+OKRES_IN_REGIONS = {
+    3018: [
+        "CZ0110"
+        ], # Hl.m. Praha
+    3026: [
+        "CZ0211", "CZ0212", "CZ0213", "CZ0214", "CZ0215", "CZ0216", "CZ0217", "CZ0218", "CZ0219", "CZ021A", "CZ021B", "CZ021C"
+        ], # Středočeský kraj
+    3034: [
+        "CZ0311", "CZ0312", "CZ0313", "CZ0314", "CZ0315", "CZ0316", "CZ0317"
+        ], # Jihočeský kraj
+    3042: [
+        "CZ0321",
+        "CZ0322",
+        "CZ0323",
+        "CZ0324",
+        "CZ0325",
+        "CZ0326",
+        "CZ0327"
+        ], # Plzeňský kraj
+    3051: [
+        "CZ0411",
+        "CZ0412",
+        "CZ0413"
+    ], # Karlovarský kraj
+    3069: [
+        "CZ0421",
+        "CZ0422",
+        "CZ0423",
+        "CZ0424",
+        "CZ0425",
+        "CZ0426",
+        "CZ0427"
+    ], # Ústecký kraj
+    3077: [
+        "CZ0511",
+        "CZ0512",
+        "CZ0513",
+        "CZ0514"
+    ], # Liberecký kraj
+    3085: [
+        "CZ0521",
+        "CZ0522",
+        "CZ0523",
+        "CZ0524",
+        "CZ0525"
+    ], # Královéhradecký kraj
+    3093: [
+        "CZ0531",
+        "CZ0532",
+        "CZ0533",
+        "CZ0534"
+    ], # Pardubický kraj
+    3107: [
+        "CZ0611",
+        "CZ0612",
+        "CZ0613",
+        "CZ0614",
+        "CZ0615"
+    ], # Kraj Vysočina
+    3115: [
+        "CZ0621",
+        "CZ0622",
+        "CZ0623",
+        "CZ0624",
+        "CZ0625",
+        "CZ0626",
+        "CZ0627"
+    ], # Jihomoravský kraj
+    3123: [
+        "CZ0711",
+        "CZ0712",
+        "CZ0713",
+        "CZ0714",
+        "CZ0715"
+    ], # Olomoucký kraj
+    3131: [
+        "CZ0721",
+        "CZ0722",
+        "CZ0723",
+        "CZ0724"
+        ], # Zlínský kraj
+    3140: [
+        "CZ0811",
+        "CZ0812",
+        "CZ0813",
+        "CZ0814",
+        "CZ0815",
+        "CZ0816"
+    ]  # Moravskoslezský kraj
+}
+
 OKRES_CODES = {
     40169: "CZ0211",
     40177: "CZ0212",
