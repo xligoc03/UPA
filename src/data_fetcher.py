@@ -60,6 +60,9 @@ def parse_address(element: ET.Element, tag_names: List) -> Dict:
             0).replace(" ", "")
         city = re.search(r' \D+[ 0-9]*', element.find(f"./{common_tags[0]}").text).group(0).strip()
 
+    if city:
+        city = re.sub(r'[0-9]', '', city).strip()
+
     return {'ulica': street, 'mesto': city, 'mestska_cast': city_district, 'psc': postal_code}
 
 
@@ -112,11 +115,11 @@ def clean_school_data() -> dict:
 
                 for schools_elem in root_elem.findall('./SkolyZarizeni'):
                     for school_elem in schools_elem.findall('./SkolaZarizeni'):
+                        capacity = 0 if (school_elem.find('SkolaKapacita').text == 'neuvádí se') else int(school_elem.find('SkolaKapacita').text)
                         school_items.append({
                             'nazov': school_elem.find('SkolaPlnyNazev').text,
                             'typ': school_elem.find('SkolaDruhTyp').text,
-                            'kapacita': school_elem.find('SkolaKapacita').text
-                        })
+                            'kapacita': capacity})
 
                     item_dict['nazov'] = name
                     item_dict['adresa'] = address_item

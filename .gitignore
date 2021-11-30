@@ -1,5 +1,8 @@
 .idea
+.vscode
 .DS_STORE
 __pycache__
 venv/**
 data/**
+notebooks/output/csv/**
+notebooks/output/svg/**
