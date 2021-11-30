@@ -8,6 +8,7 @@ import logging
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from src.config import MONGO_CONNECTION_STRING
+from datetime import date
 
 
 class MongoDatabase:
@@ -45,7 +46,33 @@ class MongoDatabase:
 
     def import_data(self, data, collection) -> int:
         if isinstance(data, list):
-            collection.insert_many(data)
+            res = collection.insert_many(data)
         else:
-            collection.insert_one(data)
-        return os.EX_OK
+            res = collection.insert_one(data)
+
+        return 0 if res.raw_result['ok'] == 1.0 else 1
+
+    def update_data(self, data, collection) -> int:
+        """
+        Update data in database, insert new ones if missing
+        :param data: dictionary with data
+        :param collection: collection to be updated
+        :return: 0 if success, 1 otherwise
+        """
+        res = 0
+        if isinstance(data, list):
+            for d in data:
+                res = collection.update_one(
+                    {
+                        "_id" : {"$eq": d['_id']}},
+                    {
+                        "$set" : {
+                            "den_aktualizacie" : date.today().strftime("%d/%m/%Y")
+                        }
+                    },
+                    upsert=True
+                )
+        else:
+            res = self.update_data(collection, [data])
+
+        return 0 if res.raw_result['ok'] == 1.0 else 1

@@ -23,6 +23,10 @@ DB_HOST = "localhost"
 # connection string
 MONGO_CONNECTION_STRING = f"mongodb://{DB_USER}:{DB_PSWD}@{DB_HOST}:{DB_PORT}"
 
+MONGO_SCHOOLS_DB_NAME = "schools"
+MONGO_SCHOOLS_COLLECTION_NAME = "all_schools"
+MONGO_POPULATION_COLLECTION_NAME = "population"
+
 # regions codes whole republic included
 REGION_CODES = {19, 3018, 3026, 3034, 3042, 3051, 3069, 3077, 3085, 3093, 3107, 3115, 3123, 3131,
                 3140}

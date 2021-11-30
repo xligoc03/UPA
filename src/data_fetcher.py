@@ -157,13 +157,14 @@ def clean_regions_data() -> dict:
     :return: dict storing only lowest level of data from dataset
     """
     regions_df = fetch_regions()
+    regions_df.columns = regions_df.columns.str.replace('idhod', '_id')
     regions_df = regions_df.loc[
         (regions_df['casref_do'] == "2020-12-31") &  # statics only from last year
         (~regions_df['vuzemi_kod'].isin(REGION_CODES)) &  # remove region aggregation from dataset
         (regions_df['pohlavi_kod'].notnull()) &  # remove gender aggregation from dataset
-        (regions_df['vek_kod'].notnull())]  # remove age aggregation from dataset
+        (regions_df['vek_kod'].notnull())] # remove age aggregation from dataset
     regions_df.drop(
-        ["idhod", "stapro_kod", "pohlavi_cis", "pohlavi_txt", "vek_cis", "casref_do", "vek_txt",
+        ["stapro_kod", "pohlavi_cis", "pohlavi_txt", "vek_cis", "casref_do", "vek_txt",
          "vuzemi_cis"],
         inplace=True, axis=1)
 
