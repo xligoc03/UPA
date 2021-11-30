@@ -126,7 +126,7 @@ def clean_school_data() -> dict:
 
                 all_items.append(item_dict)
 
-    return json.loads(json.dumps(all_items, ensure_ascii=False))
+    return json.loads(json.dumps(all_items, ensure_ascii=True))
 
 
 def fetch_regions() -> pd.DataFrame:

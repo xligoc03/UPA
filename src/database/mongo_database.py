@@ -46,11 +46,11 @@ class MongoDatabase:
 
     def import_data(self, data, collection) -> int:
         if isinstance(data, list):
-            res = collection.insert_many(data)
+            collection.insert_many(data)
         else:
-            res = collection.insert_one(data)
+            collection.insert_one(data)
 
-        return 0 if res.raw_result['ok'] == 1.0 else 1
+        return 0
 
     def update_data(self, data, collection) -> int:
         """

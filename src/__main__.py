@@ -2,7 +2,6 @@
 """
 Dockerized application for fetching and processing data about educational system in Czech Republic
 """
-import os
 import sys
 from database.mongo_database import MongoDatabase
 from src.data_fetcher import DataFetcher
@@ -10,6 +9,27 @@ from config import MONGO_SCHOOLS_DB_NAME, MONGO_SCHOOLS_COLLECTION_NAME, MONGO_P
 
 # pylint: disable=missing-function-docstring
 def main() -> int:
+    return fetch_and_store_data()
+
+
+def check_db(db_client, mongo_db):
+    """
+    Check if database exists or create one
+    :param db_client: database client
+    :param mongo_db: database class instance
+    :return: database
+    """
+    existing_dbs = db_client.list_database_names()
+    if MONGO_SCHOOLS_DB_NAME in existing_dbs:
+        return db_client.get_database(MONGO_SCHOOLS_DB_NAME)
+    else:
+        # create DB
+        database = mongo_db.create_db(MONGO_SCHOOLS_DB_NAME)
+
+    return database
+
+
+def fetch_and_store_data() -> int :
     mongo_db = MongoDatabase(27017)
     get_data = DataFetcher()
 
